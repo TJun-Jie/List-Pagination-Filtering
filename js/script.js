@@ -6,6 +6,9 @@ FSJS project 2 - List Filter and Pagination
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
 
+//Allows app to work even if script tag is added at the head of the html
+window.addEventListener('DOMContentLoaded', () => {
+
 /*** 
    Add your global variables that store the DOM elements you will 
    need to reference and/or manipulate. 
@@ -17,23 +20,33 @@ FSJS project 2 - List Filter and Pagination
    scoped to that function.
 ***/
 
+   const students = document.querySelectorAll('.student-item');
 
 
 
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
+// Hiding all students
+   function hideStudents() {
+      for (let i=0; i < students.length ; i ++) {
+         students[i].style.display = 'none';
+      } 
+   }
 
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
-***/
+// ShowPage function which shows the students on that page and hide the rest of the students
+   function showPage(page) {
+
+      hideStudents();
+
+      // Finding the starting index and the ending index of the students that needs to be shown
+      const start = (parseInt(page) -1 ) * 10;
+      const end = parseInt(page)  * 10;
+
+      //  Displaying the students that needs to be shown
+      for(let i=start; i < end ; i++){
+         students[i].style.display = 'block';
+      }
+   }
+
+   
 
 
 
@@ -43,8 +56,16 @@ FSJS project 2 - List Filter and Pagination
    functionality to the pagination buttons.
 ***/
 
+function appendPageLinks() {
+   const maxPage = Math.ceil(students.length/10)
+}
+Math.ceil(35/10)
+
 
 
 
 
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
+
+
+})

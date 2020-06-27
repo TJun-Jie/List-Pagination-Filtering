@@ -2,18 +2,20 @@ Select all the students
 store students in array
 
 create showPageFunction taking 2 parameters(studentsArray, page)
+    hide all students
     for student in students
         page 1 will show students in index 0 to 9
         page 2 will show studetns in index 10 to 19,
         page 3 will show studeitns in index 20 to 29,
         page x will show students in index (x-1)10 to 10x -1
-        cut students page from to fit page and store it in pagestudents as a new array.
-        return page students
+        show the studnets in the page
+        
     end of for loop
 
 create appendpagelinks function
     find the maximum number of pages needed and store it in maxPage variable
     create div with class pagination
+    create ul
     loop throguh maxPage variable
     create li element
     create <a> element
