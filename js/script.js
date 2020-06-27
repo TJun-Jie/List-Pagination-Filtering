@@ -21,6 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
 ***/
 
    const students = document.querySelectorAll('.student-item');
+   const page = document.querySelector('.page');
 
 
 
@@ -57,9 +58,39 @@ window.addEventListener('DOMContentLoaded', () => {
 ***/
 
 function appendPageLinks() {
-   const maxPage = Math.ceil(students.length/10)
+
+   //storing maximum number of pages in a variable
+   const maxPage = Math.ceil(students.length/10);
+
+   //creating div element and adding the class 'pagination' to it
+   const div = document.createElement('div');
+   div.className = 'pagination'
+
+   //Creating ul element
+   const ul = document.createElement('ul')
+
+   //creating page number and appending page number to ul
+   for (i = 0; i < maxPage ; i++) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      // since index is zero-based, i + 1 in order for page to start from 1
+      a.textContent = `${i+1}`
+      li.appendChild(a);
+      ul.appendChild(li)
+   }
+
+   //appending ul to div
+   div.appendChild(ul);
+
+   //appending div to the main page
+   page.appendChild(div);
+
+
+   
+
 }
-Math.ceil(35/10)
+
+appendPageLinks();
 
 
 
