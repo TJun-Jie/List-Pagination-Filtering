@@ -52,102 +52,140 @@ window.addEventListener('DOMContentLoaded', () => {
    
 
 
-function appendPageLinks(totalElements) {
+   function appendPageLinks(totalElementsNumber) {
 
-   //storing maximum number of pages in a variable
-   const maxPage = Math.ceil(totalElements.length/10);
+      //storing maximum number of pages in a variable
+      const maxPage = Math.ceil(totalElementsNumber.length/10);
 
-   //creating div element and adding the class 'pagination' to it
-   const div = document.createElement('div');
-   div.className = 'pagination'
+      //creating div element and adding the class 'pagination' to it
+      const div = document.createElement('div');
+      div.className = 'pagination'
 
-   //Creating ul element
-   const ul = document.createElement('ul')
+      //Creating ul element
+      const ul = document.createElement('ul')
 
-   //creating page number and appending page number to ul
-   for (i = 0; i < maxPage ; i++) {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      // since index is zero-based, i + 1 in order for page to start from 1
-      a.textContent = `${i+1}`
-      li.appendChild(a);
-      ul.appendChild(li)
+      //creating page number and appending page number to ul
+      for (i = 0; i < maxPage ; i++) {
+         const li = document.createElement('li');
+         const a = document.createElement('a');
+         // since index is zero-based, i + 1 in order for page to start from 1
+         a.textContent = `${i+1}`
+         li.appendChild(a);
+         ul.appendChild(li)
+      }
+
+      //Adding eventListener to change page when page number is clicked 
+      ul.addEventListener('click', (e) => {
+
+         if (e.target.tagName === 'A') {
+            const page = e.target.textContent;
+            showPage(page);
+
+            //Remove active classes from all page numbers
+            const numberLink = document.querySelectorAll('.pagination a')
+            for (let i = 0; i < numberLink.length; i ++) {
+               numberLink[i].classList.remove('active');
+            }
+            //Adding active class when page number is clicked.
+            e.target.className = 'active'
+         }
+
+      })
+
+      //appending ul to div
+      div.appendChild(ul);
+
+      //appending div to the main page
+      page.appendChild(div);
+   
    }
 
-   //Adding eventListener to change page when page number is clicked 
-   ul.addEventListener('click', (e) => {
+   //Creating searchBar
+   function createSearchBar() {
+      const pageHeader = document.querySelector('.page-header');
+      const div = document.createElement('div');
+      div.className = 'student-search';
+      const button = document.createElement('button')
+      const input = document.createElement('input');
+      button.textContent = "Search"
+      div.appendChild(input);
+      div.appendChild(button);
 
-      if (e.target.tagName === 'A') {
-         const page = e.target.textContent;
-         showPage(page);
-
-         //Remove active classes from all page numbers
-         const numberLink = document.querySelectorAll('.pagination a')
-         for (let i = 0; i < numberLink.length; i ++) {
-            numberLink[i].classList.remove('active');
-         }
-         //Adding active class when page number is clicked.
-         e.target.className = 'active'
-      }
-
-   })
-
-   //appending ul to div
-   div.appendChild(ul);
-
-   //appending div to the main page
-   page.appendChild(div);
- 
-}
-
-//Creating searchBar
-function createSearchBar() {
-   const pageHeader = document.querySelector('.page-header');
-   const input = document.createElement('input');
-   pageHeader.appendChild(input);
-}
+      pageHeader.appendChild(div);
+   }
 
 
-function filterSearch() {
-   const input = document.querySelector('input')
+   function filterSearch() {
+      const input = document.querySelector('input');
+      const button = document.querySelector('button');
 
-   //Event triggered whenever the input changes 
-   input.addEventListener('input', (e) => {
+      //Event triggered whenever the input changes 
+      button.addEventListener('click', (e) => {
+         const paginationDiv = document.querySelector('.pagination')
 
-      // Hide all students and only show students which matches with the search results
-      hideStudents();
-      const search = e.target.value;
-      if (search === ''){
-         //Return to page 1 if input field is empty 
-         showPage(1); 
-      } else {
-         // Get all student names and loop through them
-         const studentNames = document.querySelectorAll('.student-details h3')
-         for (let i=0; i<studentNames.length; i++) {
-            textContent = studentNames[i].textContent
-            // If student name aligns with the search, show the element
-            if (textContent.startsWith(search)) {
-               const li = studentNames[i].parentNode.parentNode;
-               li.style.display = 'block';
+         // Hide all students and only show students which matches with the search results
+         hideStudents();
+         const search = input.value;
+         page.removeChild(paginationDiv);
+
+         if (search === ''){
+            //Return to page 1 if input field is empty 
+            showPage(1); 
+            appendPageLinks(students);
+            deleteErrorMessage();
+
+         } else {
+            // Get all student names and loop through them
+            const studentNames = document.querySelectorAll('.student-details h3')
+            const matches = [];
+            for (let i=0; i<studentNames.length; i++) {
+               // appendPageLinks(students);
+               textContent = studentNames[i].textContent;
+
+               // If student name aligns with the search, show the element
+               if (textContent.startsWith(search)) {
+                  const li = studentNames[i].parentNode.parentNode;
+                  li.style.display = 'block';
+                  matches.push(textContent);
+               }
+            }
+            appendPageLinks(matches);
+            if (matches.length ===0) {
+               createErrorMessage();
             }
          }
-      }
+   
+      })
+   }
 
-      
-      
-   })
-}
+   function deleteErrorMessage() {
+      const errorMessage = document.querySelector('.error-message');
+      page.removeChild(errorMessage);
+   }
+
+   function createErrorMessage() {
+      const errorMessage = document.createElement('h4');
+      errorMessage.className = "error-message";
+      errorMessage.textContent = 'No results have been found';
+      page.appendChild(errorMessage);
+   }
 
 
-createSearchBar()
-filterSearch()
+   // Functions to be called when page refreshes/start
+   function initialize() {
+      createSearchBar()
+      filterSearch()
+      appendPageLinks(students);
+   }
 
-appendPageLinks(students);
+
+
+   initialize()
 
 
 
-//Loads page 1 when browser refresh
-showPage(1); 
+   //Loads page 1 when browser refresh
+   showPage(1); 
 
 
 
