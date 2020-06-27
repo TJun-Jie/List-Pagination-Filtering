@@ -43,19 +43,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
       //  Displaying the students that needs to be shown
       for(let i=start; i < end ; i++){
-         students[i].style.display = 'block';
+         if (students[i]) {
+            students[i].style.display = 'block';
+         }
       }
    }
 
    
 
-
-
-
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
-***/
 
 function appendPageLinks() {
 
@@ -79,6 +74,24 @@ function appendPageLinks() {
       ul.appendChild(li)
    }
 
+   //Adding eventListener to change page when page number is clicked 
+   ul.addEventListener('click', (e) => {
+
+      if (e.target.tagName === 'A') {
+         const page = e.target.textContent;
+         showPage(page);
+
+         //Remove active classes from all page numbers
+         const numberLink = document.querySelectorAll('.pagination a')
+         for (let i = 0; i < numberLink.length; i ++) {
+            numberLink[i].classList.remove('active');
+         }
+         //Adding active class when page number is clicked.
+         e.target.className = 'active'
+      }
+
+   })
+
    //appending ul to div
    div.appendChild(ul);
 
@@ -93,10 +106,9 @@ function appendPageLinks() {
 appendPageLinks();
 
 
+//Loads page 1 when browser refresh
+showPage(1); 
 
-
-
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
 
 
 })
