@@ -3,36 +3,25 @@ Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
    
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
 
 //Allows app to work even if script tag is added at the head of the html
 window.addEventListener('DOMContentLoaded', () => {
 
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
-
+   // Global variables
    const students = document.querySelectorAll('.student-item');
    const page = document.querySelector('.page');
 
 
 
-// Hiding all students
+   // Hiding all students
    function hideStudents() {
       for (let i=0; i < students.length ; i ++) {
          students[i].style.display = 'none';
       } 
    }
 
-// ShowPage function which shows the students on that page and hide the rest of the students
+   // ShowPage function which shows the students on that page and hide the rest of the students
    function showPage(page) {
 
       hideStudents();
@@ -74,7 +63,7 @@ window.addEventListener('DOMContentLoaded', () => {
          ul.appendChild(li)
       }
 
-      //Adding eventListener to change page when page number is clicked 
+      //Adding click Listener to change page when page number is clicked 
       ul.addEventListener('click', (e) => {
 
          if (e.target.tagName === 'A') {
@@ -126,10 +115,13 @@ window.addEventListener('DOMContentLoaded', () => {
          // Hide all students and only show students which matches with the search results
          hideStudents();
          const search = input.value;
+
+         //Remove current paginationDiv to add updated paginationDiv for the search
          page.removeChild(paginationDiv);
 
          if (search === ''){
             //Return to page 1 if input field is empty 
+
             showPage(1); 
             appendPageLinks(students);
             deleteErrorMessage();
@@ -138,8 +130,8 @@ window.addEventListener('DOMContentLoaded', () => {
             // Get all student names and loop through them
             const studentNames = document.querySelectorAll('.student-details h3')
             const matches = [];
+
             for (let i=0; i<studentNames.length; i++) {
-               // appendPageLinks(students);
                textContent = studentNames[i].textContent;
 
                // If student name aligns with the search, show the element
@@ -149,6 +141,7 @@ window.addEventListener('DOMContentLoaded', () => {
                   matches.push(textContent);
                }
             }
+            //Create paginationDiv in accordance to the number of search results
             appendPageLinks(matches);
             if (matches.length ===0) {
                createErrorMessage();
@@ -158,11 +151,13 @@ window.addEventListener('DOMContentLoaded', () => {
       })
    }
 
+   //Delete error message when its not needed 
    function deleteErrorMessage() {
       const errorMessage = document.querySelector('.error-message');
       page.removeChild(errorMessage);
    }
 
+   // create error message when no search results is found
    function createErrorMessage() {
       const errorMessage = document.createElement('h4');
       errorMessage.className = "error-message";
@@ -172,22 +167,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
    // Functions to be called when page refreshes/start
-   function initialize() {
+   function initialize() { 
+      //Load page 1
+      showPage(1); 
       createSearchBar()
       filterSearch()
       appendPageLinks(students);
    }
 
-
-
    initialize()
-
-
-
-   //Loads page 1 when browser refresh
-   showPage(1); 
-
-
 
 
 })
