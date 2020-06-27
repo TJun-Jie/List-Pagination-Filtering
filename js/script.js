@@ -22,7 +22,7 @@ window.addEventListener('DOMContentLoaded', () => {
    }
 
    // ShowPage function which shows the students on that page and hide the rest of the students
-   function showPage(page) {
+   function showPage(page, elements) {
 
       hideStudents();
 
@@ -32,8 +32,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
       //  Displaying the students that needs to be shown
       for(let i=start; i < end ; i++){
-         if (students[i]) {
-            students[i].style.display = 'block';
+         //If there is student at that spot, then set the  display. There might not be any students  at the 55th place
+         if (elements[i]) {
+            elements[i].style.display = 'block';
          }
       }
    }
@@ -41,10 +42,10 @@ window.addEventListener('DOMContentLoaded', () => {
    
 
 
-   function appendPageLinks(totalElementsNumber) {
+   function appendPageLinks(totalElementsNumber, elements) {
 
       //storing maximum number of pages in a variable
-      const maxPage = Math.ceil(totalElementsNumber.length/10);
+      const maxPage = Math.ceil(totalElementsNumber/10);
 
       //creating div element and adding the class 'pagination' to it
       const div = document.createElement('div');
@@ -68,7 +69,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
          if (e.target.tagName === 'A') {
             const page = e.target.textContent;
-            showPage(page);
+            showPage(page, elements);
 
             //Remove active classes from all page numbers
             const numberLink = document.querySelectorAll('.pagination a')
@@ -79,6 +80,7 @@ window.addEventListener('DOMContentLoaded', () => {
             e.target.className = 'active'
          }
 
+
       })
 
       //appending ul to div
@@ -86,10 +88,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
       //appending div to the main page
       page.appendChild(div);
-   
+
+      //Make sure the active class of the button is on 1 when new page loads
+      const loadFirstpage = document.querySelectorAll('.pagination a')[0]
+      loadFirstpage.className = 'active'
+
    }
 
-   //Creating searchBar
+   //Creating searchBar function
    function createSearchBar() {
       const pageHeader = document.querySelector('.page-header');
       const div = document.createElement('div');
@@ -104,6 +110,7 @@ window.addEventListener('DOMContentLoaded', () => {
    }
 
 
+   // filtersearch function
    function filterSearch() {
       const input = document.querySelector('input');
       const button = document.querySelector('button');
@@ -116,14 +123,16 @@ window.addEventListener('DOMContentLoaded', () => {
          hideStudents();
          const search = input.value;
 
-         //Remove current paginationDiv to add updated paginationDiv for the search
-         page.removeChild(paginationDiv);
+         //Remove current paginationDiv (if there is one )to add updated paginationDiv for the search
+         if (paginationDiv) {
+            page.removeChild(paginationDiv);
+         }
 
          if (search === ''){
             //Return to page 1 if input field is empty 
 
-            showPage(1); 
-            appendPageLinks(students);
+            showPage(1, students); 
+            appendPageLinks(students.length, students);
             deleteErrorMessage();
 
          } else {
@@ -135,16 +144,19 @@ window.addEventListener('DOMContentLoaded', () => {
                textContent = studentNames[i].textContent;
 
                // If student name aligns with the search, show the element
-               if (textContent.startsWith(search)) {
+               if (textContent.includes(search)) {
                   const li = studentNames[i].parentNode.parentNode;
                   li.style.display = 'block';
-                  matches.push(textContent);
+                  const studentDiv = studentNames[i].parentNode.parentNode
+                  matches.push(studentDiv);
                }
             }
-            //Create paginationDiv in accordance to the number of search results
-            appendPageLinks(matches);
             if (matches.length ===0) {
                createErrorMessage();
+            } else {
+               //Create paginationDiv in accordance to the number of search results and show page 1 of the results
+               showPage(1, matches)
+               appendPageLinks(matches.length, matches);
             }
          }
    
@@ -154,25 +166,31 @@ window.addEventListener('DOMContentLoaded', () => {
    //Delete error message when its not needed 
    function deleteErrorMessage() {
       const errorMessage = document.querySelector('.error-message');
-      page.removeChild(errorMessage);
+      if (errorMessage) {
+         page.removeChild(errorMessage);
+      }
    }
 
    // create error message when no search results is found
    function createErrorMessage() {
-      const errorMessage = document.createElement('h4');
-      errorMessage.className = "error-message";
-      errorMessage.textContent = 'No results have been found';
-      page.appendChild(errorMessage);
+      //If no errorMessage, then create error message. 
+      const errorMessage = document.querySelector('.error-message');
+      if (!errorMessage) {
+         const errorMessage = document.createElement('h4');
+         errorMessage.className = "error-message";
+         errorMessage.textContent = 'No results have been found';
+         page.appendChild(errorMessage);
+      }
    }
 
 
    // Functions to be called when page refreshes/start
    function initialize() { 
       //Load page 1
-      showPage(1); 
+      showPage(1, students); 
       createSearchBar()
       filterSearch()
-      appendPageLinks(students);
+      appendPageLinks(students.length, students);
    }
 
    initialize()
