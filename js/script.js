@@ -58,6 +58,8 @@ window.addEventListener('DOMContentLoaded', () => {
       for (i = 0; i < maxPage ; i++) {
          const li = document.createElement('li');
          const a = document.createElement('a');
+         //Setting the cursor to a pointer when hovering over the page numbers
+         a.style.cursor = 'pointer'
          // since index is zero-based, i + 1 in order for page to start from 1
          a.textContent = `${i+1}`
          li.appendChild(a);
@@ -157,6 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
                //Create paginationDiv in accordance to the number of search results and show page 1 of the results
                showPage(1, matches)
                appendPageLinks(matches.length, matches);
+               deleteErrorMessage();
             }
          }
    
