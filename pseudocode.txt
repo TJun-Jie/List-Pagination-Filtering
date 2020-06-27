@@ -27,4 +27,13 @@ create appendpagelinks function
     add active class for the page that is clicekd 
 
 
+search functionality
+    create search bar
+    store user input in variable
+    add event listener to search bar when input changes
+    when the first input is typed, hide all students
+    loop through all students and store their name in an array
+    if input matches student's name, show the input.
+
+
 

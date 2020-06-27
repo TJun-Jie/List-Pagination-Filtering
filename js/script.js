@@ -52,10 +52,10 @@ window.addEventListener('DOMContentLoaded', () => {
    
 
 
-function appendPageLinks() {
+function appendPageLinks(totalElements) {
 
    //storing maximum number of pages in a variable
-   const maxPage = Math.ceil(students.length/10);
+   const maxPage = Math.ceil(totalElements.length/10);
 
    //creating div element and adding the class 'pagination' to it
    const div = document.createElement('div');
@@ -97,17 +97,58 @@ function appendPageLinks() {
 
    //appending div to the main page
    page.appendChild(div);
-
-
-   
-
+ 
 }
 
-appendPageLinks();
+//Creating searchBar
+function createSearchBar() {
+   const pageHeader = document.querySelector('.page-header');
+   const input = document.createElement('input');
+   pageHeader.appendChild(input);
+}
+
+
+function filterSearch() {
+   const input = document.querySelector('input')
+
+   //Event triggered whenever the input changes 
+   input.addEventListener('input', (e) => {
+
+      // Hide all students and only show students which matches with the search results
+      hideStudents();
+      const search = e.target.value;
+      if (search === ''){
+         //Return to page 1 if input field is empty 
+         showPage(1); 
+      } else {
+         // Get all student names and loop through them
+         const studentNames = document.querySelectorAll('.student-details h3')
+         for (let i=0; i<studentNames.length; i++) {
+            textContent = studentNames[i].textContent
+            // If student name aligns with the search, show the element
+            if (textContent.startsWith(search)) {
+               const li = studentNames[i].parentNode.parentNode;
+               li.style.display = 'block';
+            }
+         }
+      }
+
+      
+      
+   })
+}
+
+
+createSearchBar()
+filterSearch()
+
+appendPageLinks(students);
+
 
 
 //Loads page 1 when browser refresh
 showPage(1); 
+
 
 
 
