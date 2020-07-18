@@ -1,2 +1,2 @@
 # project2-List-Pagination-Filtering
- Treehouse project 2
+This project enhances a web page by splitting the users into different pages using pagination and filtering.
